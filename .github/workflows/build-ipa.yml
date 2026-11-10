@@ -31,7 +31,7 @@ jobs:
       - name: Initialize Capacitor & Build iOS
         run: |
           npm install --save @capacitor/core @capacitor/ios
-          npx cap init "Assistant" "com.azzam.assistant" --web-dir . --yes
+          npx cap init "Assistant" "com.azzam.assistant" --web-dir .
           npx cap add ios
           npx cap sync ios
 
