@@ -18,20 +18,21 @@ jobs:
         with:
           node-version: 18
 
-      - name: Create package.json if missing
+      - name: Prepare Project & Capacitor
         run: |
           if [ ! -f package.json ]; then
             echo '{"name": "assistant-app", "version": "1.0.0", "private": true}' > package.json
           fi
-
-      - name: Install Ionic & Capacitor CLI
-        run: |
-          npm install -g @ionic/cli @capacitor/cli
-
-      - name: Initialize Capacitor & Build iOS
-        run: |
           npm install --save @capacitor/core @capacitor/ios
-          npx cap init "Assistant" "com.azzam.assistant" --web-dir .
+          npx @capacitor/cli init "Assistant" "com.azzam.assistant" --web-dir "." || true
+          
+          # إنشاء مجلد www ونقل ملفات الويب إليه لتجنب مشكلة webDir
+          mkdir -p www
+          find . -maxdepth 1 ! -name 'www' ! -name 'ios' ! -name '.' ! -name '..' -exec mv {} www/ \;
+          
+          # تعديل إعدادات الـ capacitor ليقرأ من www
+          echo '{"appId": "com.azzam.assistant", "appName": "Assistant", "webDir": "www", "bundledWebRuntime": false}' > capacitor.config.json
+
           npx cap add ios
           npx cap sync ios
 
