@@ -608,3 +608,22 @@ dialog::backdrop { -webkit-backdrop-filter: blur(5px); }
   #lb img { width: 100%; height: 100%; object-fit: contain; touch-action: none; user-select: none; -webkit-user-select: none; will-change: transform; }
   #lb .lb-x { position: absolute; z-index: 2; top: calc(env(safe-area-inset-top) + 10px); inset-inline-start: 12px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.16); }
 }
+
+/* نزّلنا رأس التطبيق شوي عشان ما يغطي عليه تغبيش شريط الحالة */
+@media (max-width: 760px) {
+  .topbar { padding-top: calc(env(safe-area-inset-top) + 24px); }
+}
+
+/* ───────── تحديث بالسحب + شاشة عدم الاتصال ───────── */
+@media (max-width: 760px) {
+  #ptr { position: absolute; z-index: 4000; top: calc(env(safe-area-inset-top) + 64px); left: 50%; transform: translate(-50%, 0); padding: 8px 18px; border-radius: 999px;
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--border); box-shadow: 0 6px 20px var(--shadow); font-size: .85rem; opacity: 0; pointer-events: none; transition: opacity .15s; }
+  #ptr.on { opacity: 1; }
+  #offline { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483100; display: grid; place-items: center; padding: 24px;
+    background: color-mix(in srgb, var(--bg-b) 96%, transparent); color: var(--text); }
+  #offline[hidden] { display: none; }
+  #offline .oc { max-width: 340px; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  #offline .oi { width: 64px; height: 64px; border-radius: 22px; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--border); color: var(--accent); }
+  #offline h3 { margin: 0; font-size: 1.15rem; }
+  #offline p { margin: 0; color: var(--muted); line-height: 1.8; font-size: .92rem; }
+}

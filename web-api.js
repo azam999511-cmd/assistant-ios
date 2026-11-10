@@ -8,6 +8,14 @@
   const handlers = [];
   let curChat = null, es = null;
 
+  /* ربط تلقائي لو الجوال داخل شبكة Tailscale، فما تطلع صفحة الربط */
+  async function pair() {
+    try {
+      const r = await fetch('/api/pair', { cache: 'no-store' }); if (!r.ok) return false;
+      const j = await r.json(); if (!j.token) return false;
+      tok = j.token; try { localStorage.setItem('mu.tok', tok); } catch {} return true;
+    } catch { return false; }
+  }
   function authBox(msg) {
     if (document.getElementById('authBox')) return;
     const d = document.createElement('div'); d.id = 'authBox';
@@ -27,13 +35,13 @@
   }
 
   async function call(method, path, body, raw, signal) {
-    if (!tok) { authBox(); throw new Error('ما فيه ربط مع البيسي.'); }
+    if (!tok && !(await pair())) { authBox(); throw new Error('ما فيه ربط مع البيسي.'); }
     const headers = { Authorization: 'Bearer ' + tok };
     if (!raw && body !== undefined) headers['content-type'] = 'application/json';
     let r;
     try { r = await fetch(path, { method, headers, body: raw ? body : body === undefined ? undefined : JSON.stringify(body), signal }); }
     catch (e) { if (e.name === 'AbortError') throw e; throw new Error('ما قدرت أوصل للبيسي. تأكد إنه شغّال ومتصل بنفس الشبكة أو Tailscale.'); }
-    if (r.status === 401) { try { localStorage.removeItem('mu.tok'); } catch {} tok = ''; authBox('الرابط انتهت صلاحيته أو تغيّر المفتاح. انسخ الرابط الجديد من البيسي.'); throw new Error('غير مصرّح'); }
+    if (r.status === 401) { try { localStorage.removeItem('mu.tok'); } catch {} tok = ''; if (await pair()) { location.reload(); throw new Error('إعادة ربط'); } authBox('الرابط انتهت صلاحيته أو تغيّر المفتاح. انسخ الرابط الجديد من البيسي.'); throw new Error('غير مصرّح'); }
     const d = await r.json().catch(() => ({}));
     if (!r.ok && !d.error) d.error = 'خطأ ' + r.status;
     return d;
@@ -44,7 +52,7 @@
     if (es || !tok) return;
     es = new EventSource('/api/events?t=' + encodeURIComponent(tok));
     es.addEventListener('chats', () => handlers.forEach((f) => f()));
-    es.addEventListener('revoked', () => { es.close(); es = null; try { localStorage.removeItem('mu.tok'); } catch {} tok = ''; authBox('تغيّر مفتاح الربط. انسخ الرابط الجديد من البيسي.'); });
+    es.addEventListener('revoked', () => { es.close(); es = null; try { localStorage.removeItem('mu.tok'); } catch {} tok = ''; pair().then((ok) => { if (ok) location.reload(); else authBox('تغيّر مفتاح الربط. انسخ الرابط الجديد من البيسي.'); }); });
     let was = false;
     es.onopen = () => { if (was) handlers.forEach((f) => f()); was = true; };
   }
@@ -84,7 +92,7 @@
     d.querySelector('button').onclick = () => { try { localStorage.setItem('mu.inst', '1'); } catch {} d.remove(); };
     setTimeout(() => document.body.append(d), 1500);
   });
-  if (!tok) addEventListener('DOMContentLoaded', () => authBox());
+  if (!tok) addEventListener('DOMContentLoaded', () => { pair().then((ok) => { if (ok) location.reload(); else authBox(); }); });
   /* الكيبورد: نتبع الارتفاع الفعلي بس وهو مفتوح، وبغير كذا نخلي الصفحة تملا الشاشة كاملة */
   const isField = () => /^(TEXTAREA|INPUT)$/.test((document.activeElement || {}).tagName || '');
   const mob = () => matchMedia('(max-width:760px)').matches;
@@ -168,5 +176,85 @@
     }
     const all = () => items.forEach(place);
     setInterval(all, 400); addEventListener('resize', all); all();
+  });
+
+  /* سحب بالإصبع مثل تطبيقات الجوال: من اليمين لليسار تفتح قائمة المحادثات، ومن اليسار لليمين تسكّرها */
+  addEventListener('DOMContentLoaded', () => {
+    const hist = document.getElementById('hist'); if (!hist) return;
+    let sx = 0, sy = 0, st = 0, ok = false;
+    document.addEventListener('touchstart', (e) => {
+      const lb = document.getElementById('lb');
+      ok = e.touches.length === 1 && mob() && hist.offsetParent !== null && !(lb && !lb.hidden) &&
+        !(e.target.closest && e.target.closest('.qa, textarea, input, select, .sbar, pre, table'));
+      if (ok) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }
+    }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (!ok) return; ok = false;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Date.now() - st > 700 || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+      const off = hist.classList.contains('off');
+      if (off && dx < 0 && sx > innerWidth * 0.3) { hist.classList.remove('off'); hap('LIGHT'); }
+      else if (!off && dx > 0) { hist.classList.add('off'); hap('LIGHT'); }
+    }, { passive: true });
+  });
+
+  /* ===== اهتزاز خفيف (داخل تطبيق الآيفون؛ بالمتصفح ما يسوي شي) ===== */
+  function hap(style) {
+    try {
+      const H = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+      if (H) H.impact({ style: style || 'LIGHT' }); else if (navigator.vibrate) navigator.vibrate(8);
+    } catch {}
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('#go, .rail-btn, .qa .btn, .cta .btn, .sw, .ib');
+    if (t && mob()) hap(t.id === 'go' ? 'MEDIUM' : 'LIGHT');
+  }, true);
+
+  /* ===== اسحب من فوق لتحت لتحديث المحادثات ===== */
+  addEventListener('DOMContentLoaded', () => {
+    const pill = document.createElement('div'); pill.id = 'ptr'; pill.textContent = 'اسحب للتحديث'; document.body.append(pill);
+    let el = null, y0 = 0, armed = false;
+    document.addEventListener('touchstart', (e) => {
+      el = null; if (!mob() || e.touches.length !== 1) return;
+      const s = e.target.closest && e.target.closest('#log, #list, .welcome');
+      if (s && s.scrollTop <= 0) { el = s; y0 = e.touches[0].clientY; armed = false; }
+    }, { passive: true });
+    document.addEventListener('touchmove', (e) => {
+      if (!el) return;
+      const q = document.getElementById('q'); if (q && q.value) { el = null; pill.classList.remove('on'); return; }
+      const pull = e.touches[0].clientY - y0;
+      if (pull <= 12 || el.scrollTop > 0) { pill.classList.remove('on'); return; }
+      pill.classList.add('on'); pill.style.transform = 'translate(-50%,' + Math.min(pull * 0.45, 60) + 'px)';
+      if (pull > 110 && !armed) { armed = true; pill.textContent = 'اترك للتحديث'; hap('MEDIUM'); }
+      else if (pull <= 110 && armed) { armed = false; pill.textContent = 'اسحب للتحديث'; }
+    }, { passive: true });
+    document.addEventListener('touchend', () => {
+      if (el && armed) { pill.textContent = 'جاري التحديث…'; setTimeout(() => location.reload(), 200); }
+      else pill.classList.remove('on');
+      el = null;
+    }, { passive: true });
+  });
+
+  /* ===== شاشة «البيسي مو متصل» + إعادة اتصال تلقائي ===== */
+  addEventListener('DOMContentLoaded', () => {
+    const ov = document.createElement('div'); ov.id = 'offline'; ov.hidden = true;
+    ov.innerHTML = '<div class="oc"><div class="oi"><svg class="ic"><use href="#i-x"/></svg></div><h3>البيسي مو متصل</h3>' +
+      '<p>تأكد إن البيسي شغّال ومتصل بالنت. ولو أنت برا البيت لازم Tailscale يكون شغّال على الجوال. بيرجع يتصل لحاله أول ما يشتغل.</p>' +
+      '<button class="btn pri" id="offRetry">أعد المحاولة</button></div>';
+    document.body.append(ov);
+    let fails = 0, busy = false;
+    const check = async () => {
+      if (busy || document.hidden) return; busy = true;
+      try {
+        const c = new AbortController(), t = setTimeout(() => c.abort(), 4000);
+        const r = await fetch('/manifest.webmanifest?_=' + Date.now(), { cache: 'no-store', signal: c.signal }); clearTimeout(t);
+        if (!r.ok) throw 0;
+        fails = 0; if (!ov.hidden) { ov.hidden = true; location.reload(); }
+      } catch { if (++fails >= 2) ov.hidden = false; }
+      busy = false;
+    };
+    setInterval(check, 5000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { fails = 1; check(); } });
+    document.getElementById('offRetry').onclick = () => { fails = 1; check(); };
   });
 })();
