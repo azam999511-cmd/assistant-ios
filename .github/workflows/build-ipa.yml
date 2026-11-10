@@ -1,3 +1,4 @@
+
 name: Build iOS IPA
 
 on:
@@ -10,40 +11,132 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      # 1. تحميل ملفات المشروع
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # 2. تثبيت Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
-      - name: Build iOS App Bundle
+      # 3. تثبيت Capacitor 8
+      - name: Install Capacitor
         run: |
-          # 1. تثبيت أدوات كاباسيتور الأساسية
-          npm install @capacitor/core @capacitor/cli @capacitor/ios
+          if [ ! -f package.json ]; then
+            npm init -y
+          fi
 
-          # 2. تهيئة المشروع بدون خيارات خاطئة
-          npx cap init "Assistant" "com.azzam.assistant" --web-dir www || true
+          npm install @capacitor/core@8 @capacitor/cli@8 @capacitor/ios@8
 
-          # 3. تنظيم مجلد الويب للملفات
+      # 4. تجهيز ملفات HTML و CSS و JavaScript
+      - name: Prepare Web Files
+        run: |
           mkdir -p www
-          find . -maxdepth 1 ! -name 'www' ! -name 'ios' ! -name '.' ! -name '..' -exec mv {} www/ \;
 
-          # 4. إضافة منصة الآيفون والمزامنة
-          npx cap add ios
+          if [ ! -f www/index.html ]; then
+            rsync -av \
+              --exclude='.git' \
+              --exclude='.github' \
+              --exclude='node_modules' \
+              --exclude='ios' \
+              --exclude='android' \
+              --exclude='www' \
+              --exclude='package.json' \
+              --exclude='package-lock.json' \
+              --exclude='capacitor.config.*' \
+              --exclude='.DS_Store' \
+              ./ www/
+          fi
+
+          if [ ! -f www/index.html ]; then
+            echo "ERROR: index.html not found in root or www directory!"
+            exit 1
+          fi
+
+          echo "Website files prepared successfully"
+          ls -la www
+
+      # 5. إعداد Capacitor
+      - name: Configure Capacitor
+        run: |
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.azzam.assistant",
+            "appName": "Assistant",
+            "webDir": "www"
+          }
+          EOF
+
+      # 6. إضافة منصة iOS
+      - name: Add iOS Platform
+        run: |
+          if [ ! -d ios ]; then
+            npx cap add ios
+          fi
+
           npx cap sync ios
 
-      - name: Build Unsigned IPA
+      # 7. بناء تطبيق iOS
+      - name: Build iOS App
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
-          mkdir -p Payload
-          mv build/Build/Products/Release-iphoneos/App.app Payload/
-          zip -r Assistant.ipa Payload
 
+          xcodebuild -version
+
+          if [ -d App.xcworkspace ]; then
+            xcodebuild \
+              -workspace App.xcworkspace \
+              -scheme App \
+              -configuration Release \
+              -sdk iphoneos \
+              -destination 'generic/platform=iOS' \
+              -derivedDataPath build \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO
+          else
+            xcodebuild \
+              -project App.xcodeproj \
+              -scheme App \
+              -configuration Release \
+              -sdk iphoneos \
+              -destination 'generic/platform=iOS' \
+              -derivedDataPath build \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO
+          fi
+
+      # 8. إنشاء ملف IPA
+      - name: Create IPA
+        run: |
+          cd ios/App
+
+          APP_PATH="build/Build/Products/Release-iphoneos/App.app"
+
+          if [ ! -d "$APP_PATH" ]; then
+            echo "ERROR: App.app was not generated!"
+            exit 1
+          fi
+
+          rm -rf Payload
+          mkdir -p Payload
+
+          cp -R "$APP_PATH" Payload/
+
+          ditto -c -k --sequesterRsrc --keepParent \
+            Payload Assistant.ipa
+
+          echo "IPA created successfully"
+          ls -lh Assistant.ipa
+
+      # 9. رفع ملف IPA
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Assistant-IPA
           path: ios/App/Assistant.ipa
+          if-no-files-found: error
+          retention-days: 7
