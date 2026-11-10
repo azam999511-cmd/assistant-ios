@@ -20,17 +20,17 @@ jobs:
 
       - name: Build iOS App Bundle
         run: |
-          # 1. تثبيت أدوات كاباسيتور مباشرة وبدون تداخل
+          # 1. تثبيت أدوات كاباسيتور الأساسية
           npm install @capacitor/core @capacitor/cli @capacitor/ios
 
-          # 2. إنشاء إعدادات المشروع الأساسية
-          npx cap init "Assistant" "com.azzam.assistant" --web-dir www --bundled-web-runtime false || true
+          # 2. تهيئة المشروع بدون خيارات خاطئة
+          npx cap init "Assistant" "com.azzam.assistant" --web-dir www || true
 
           # 3. تنظيم مجلد الويب للملفات
           mkdir -p www
           find . -maxdepth 1 ! -name 'www' ! -name 'ios' ! -name '.' ! -name '..' -exec mv {} www/ \;
 
-          # 4. مزامنة منصة الآيفون
+          # 4. إضافة منصة الآيفون والمزامنة
           npx cap add ios
           npx cap sync ios
 
