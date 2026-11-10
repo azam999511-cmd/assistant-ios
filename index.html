@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="sky">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content">
+<meta name="theme-color" content="#0b1530">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مساعدي">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1206x2622.png">
+<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1320x2868.png">
+<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1179x2556.png">
+<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1290x2796.png">
+<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1170x2532.png">
+<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1284x2778.png">
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1125x2436.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1242x2688.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="splash-828x1792.png">
+<title>مساعدي</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- مكتبة الأيقونات (SVG بدل الإيموجي) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></symbol>
+    <symbol id="i-binary" viewBox="0 0 24 24"><rect x="14" y="14" width="4" height="6" rx="2"/><rect x="6" y="4" width="4" height="6" rx="2"/><path d="M6 20h4M14 10h4M6 14h2v6M14 4h2v6"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 6h8M16 14v4M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></symbol>
+    <symbol id="i-tasks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect width="12" height="12" x="6" y="6" rx="2.5"/></symbol>
+    <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6a1.4 1.4 0 0 1-1 .4H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6M19.4 18.4a9 9 0 0 0 0-12.8"/></symbol>
+    <symbol id="i-volx" viewBox="0 0 24 24"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6a1.4 1.4 0 0 1-1 .4H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="m22 9-6 6M16 9l6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M21.2 6.8a1 1 0 0 0-4-4L3.8 16.2a2 2 0 0 0-.5.8l-1.3 4.4a.5.5 0 0 0 .6.6l4.4-1.3a2 2 0 0 0 .8-.5z"/><path d="m15 5 4 4"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-min" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+    <symbol id="i-max" viewBox="0 0 24 24"><rect width="12" height="12" x="6" y="6" rx="2"/></symbol>
+    <symbol id="i-restore" viewBox="0 0 24 24"><rect width="10" height="10" x="5" y="9" rx="2"/><path d="M9 9V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="3"/><path d="M15 3v18"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.1 12.3a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.8 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.8 0"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eyex" viewBox="0 0 24 24"><path d="M10.7 5.1a10.7 10.7 0 0 1 11.2 6.6 1 1 0 0 1 0 .7 10.7 10.7 0 0 1-1.4 2.5M14.1 14.2a3 3 0 0 1-4.2-4.2M17.5 17.5a10.75 10.75 0 0 1-15.4-5.2 1 1 0 0 1 0-.7 10.75 10.75 0 0 1 4.4-5.1M2 2l20 20"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12.5-7.5a1 1 0 0 0 0-1.8L8.5 3.6A1 1 0 0 0 7 4.5Z"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5a6 6 0 0 0-12 0c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></symbol>
+    <symbol id="i-retry" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8M3 3v5h5"/></symbol>
+    <symbol id="i-alarm" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M5 3 2 6M22 6l-3-3"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2c.7 5.6 3.4 8.3 10 10-6.6 1.7-9.3 4.4-10 10-.7-5.6-3.4-8.3-10-10 6.6-1.7 9.3-4.4 10-10Z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"/><path d="m18 9-6 6M12 9l6 6"/></symbol>
+    <symbol id="i-wave"viewBox="0 0 24 24"><path d="M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 3-4 5-3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  </defs>
+</svg>
+
+<div id="splash"><div class="splash-orb"><i></i><i></i><svg class="ic"><use href="#i-spark"/></svg></div></div>
+
+<div class="win" id="win">
+  <!-- الإطار المموّج (مثل إيو) -->
+  <svg class="frame" id="frame" aria-hidden="true">
+    <defs>
+      <linearGradient id="gFill" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" class="fa"/><stop offset=".5" class="fm"/><stop offset="1" class="fb"/>
+      </linearGradient>
+      <linearGradient id="gRim" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" class="rim" stop-opacity="1"/><stop offset=".28" class="rim" stop-opacity=".12"/>
+        <stop offset=".72" class="rim" stop-opacity=".12"/><stop offset="1" class="rim" stop-opacity=".95"/>
+      </linearGradient>
+      <linearGradient id="gRim2" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0" class="rim" stop-opacity=".85"/><stop offset=".4" class="rim" stop-opacity=".1"/>
+        <stop offset=".8" class="rim" stop-opacity=".1"/><stop offset="1" class="rim" stop-opacity=".8"/>
+      </linearGradient>
+    </defs>
+    <path id="fSh2" class="sh sh2"/>
+    <path id="fSh1" class="sh sh1"/>
+    <path id="fBody" class="body"/>
+    <path id="fIn" class="inner"/>
+  </svg>
+  <div class="grips" id="grips">
+    <i data-e="n"></i><i data-e="s"></i><i data-e="e"></i><i data-e="w"></i>
+    <i data-e="ne"></i><i data-e="nw"></i><i data-e="se"></i><i data-e="sw"></i>
+  </div>
+
+  <div class="app" id="app">
+    <!-- الشريط العلوي -->
+    <header class="topbar" id="topbar">
+      <div class="wc" id="wc" dir="ltr">
+        <button class="wbtn" id="wMin" aria-label="تصغير"><svg class="ic"><use href="#i-min"/></svg></button>
+        <button class="wbtn" id="wMax" aria-label="تكبير"><svg class="ic"><use href="#i-max"/></svg></button>
+        <button class="wbtn close" id="wClose" aria-label="إغلاق"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+      <div class="tb-mid">
+        <b class="brand">مساعدي</b>
+        <span class="pill st" id="stPill" data-s="idle"><i></i><b id="stTxt">جاهز</b></span>
+      </div>
+      <div class="tb-end">
+        <button class="pill conn" id="conn" title="مصدر الذكاء الحالي"><i></i><b id="connTxt">…</b></button>
+      </div>
+    </header>
+
+    <div class="body">
+      <!-- الشريط الجانبي للأيقونات -->
+      <nav class="rail" aria-label="التنقل">
+        <button class="logo" id="logo" aria-label="الأوامر السريعة (Ctrl+K)"><svg class="ic"><use href="#i-spark"/></svg></button>
+        <div class="rail-nav">
+          <button class="rail-btn on" data-p="chat"><svg class="ic"><use href="#i-chat"/></svg><span class="tip">المحادثة</span></button>
+          <button class="rail-btn" data-p="re"><svg class="ic"><use href="#i-binary"/></svg><span class="tip">هندسة عكسية</span></button>
+          <button class="rail-btn" data-p="calc"><svg class="ic"><use href="#i-calc"/></svg><span class="tip">الحاسبة</span></button>
+          <button class="rail-btn" data-p="notes"><svg class="ic"><use href="#i-note"/></svg><span class="tip">ملاحظاتي</span></button>
+          <button class="rail-btn" data-p="todo"><svg class="ic"><use href="#i-tasks"/></svg><span class="tip">مهامي</span></button>
+        </div>
+        <button class="rail-btn" data-p="set"><svg class="ic"><use href="#i-sliders"/></svg><span class="tip">الإعدادات</span></button>
+      </nav>
+
+      <main>
+        <!-- المحادثة -->
+        <section class="pg active" id="pg-chat">
+          <aside class="hist" id="hist">
+            <button class="btn p wide" id="new"><svg class="ic"><use href="#i-plus"/></svg>محادثة جديدة</button>
+            <label class="search"><svg class="ic"><use href="#i-search"/></svg><input id="srch" placeholder="ابحث في المحادثات…" autocomplete="off"></label>
+            <div id="secs" class="secs"></div>
+            <div id="list"></div>
+            <div class="chips" id="chips"></div>
+          </aside>
+          <div class="hback" id="hback"></div>
+
+          <div class="chat">
+            <div class="chat-hd">
+              <button class="ib" id="togHist" title="إظهار / إخفاء المحادثات"><svg class="ic"><use href="#i-panel"/></svg></button>
+              <div class="orb-dock" id="orbDock"></div>
+              <div class="ttl-wrap"><span id="ttl" class="ttl"></span><button class="ib sm" id="rn" title="تعديل اسم المحادثة"><svg class="ic"><use href="#i-pen"/></svg></button></div>
+              <div class="tools">
+                <label class="sel"><svg class="ic"><use href="#i-brain"/></svg>
+                  <select id="pv" aria-label="مصدر الذكاء">
+                    <option value="anthropic">Claude</option><option value="grok">Grok</option>
+                    <option value="free">مجاني</option><option value="ollama">محلي</option>
+                  </select>
+                </label>
+                <button class="ib" id="ex" title="صدّر المحادثة"><svg class="ic"><use href="#i-down"/></svg></button>
+                <button class="ib" id="mute" title="وقّف الصوت"><svg class="ic"><use href="#i-volx"/></svg></button>
+                <button class="btn mic" id="mic"><svg class="ic"><use href="#i-mic"/></svg><span>كلّمني</span></button>
+              </div>
+            </div>
+
+            <div class="stage">
+              <div id="log"></div>
+              <div class="welcome" id="welcome">
+                <h1>أهلا بعودتك عزام</h1>
+                <p>مساعدك جاهز متى ما احتجته. اكتب أو تكلم، وأنا هنا.</p>
+                <div class="tip-bar" id="tip">
+                  <span class="tip-ic"><svg class="ic"><use href="#i-bulb"/></svg></span>
+                  <span class="tip-txt" id="tipTxt"></span>
+                  <button class="btn sm" id="tipBtn"></button>
+                  <button class="ib sm" id="tipX" aria-label="إخفاء"><svg class="ic"><use href="#i-x"/></svg></button>
+                </div>
+                <div class="orb-home" id="orbHome"></div>
+                <div class="orb-cap" id="orbCap">جاهز</div>
+                <div class="cta">
+                  <button class="btn p lg" id="startChat">ابدأ المحادثة<svg class="ic"><use href="#i-arrow"/></svg></button>
+                  <button class="btn lg" id="startVoice"><svg class="ic"><use href="#i-mic"/></svg>تحدّث بالصوت</button>
+                </div>
+                <div class="cards" id="cards"></div>
+              </div>
+              <div id="drop" class="drop"><svg class="ic"><use href="#i-up"/></svg><b>أفلت الملف هنا</b><span>صور، فيديو، PDF، Word، Excel، نصوص، ZIP</span></div>
+            </div>
+
+            <div id="tray"></div>
+            <div class="qa" id="qa"></div>
+            <div class="composer">
+              <button class="ib" id="att" title="ارفع ملف"><svg class="ic"><use href="#i-clip"/></svg></button>
+              <textarea id="q" rows="1" placeholder="اكتب، أو الصق/اسحب صورة أو ملف هنا…  (Shift+Enter سطر جديد)" autofocus></textarea>
+              <button class="send" id="go" aria-label="أرسل"><svg class="ic"><use href="#i-send"/></svg></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- هندسة عكسية -->
+        <section class="pg" id="pg-re">
+          <div class="pg-hd"><span class="pg-ic"><svg class="ic"><use href="#i-binary"/></svg></span><div><h2>هندسة عكسية وفك التشفير</h2><p>الصق كود أو نص مشفّر (Base64 / Hex / سكربت) وأحلّله لك، وأشرح المنطق وأفك التشويش إن أمكن.</p></div></div>
+          <div class="pad two">
+            <div class="col">
+              <textarea id="reInput" placeholder="الصق الكود أو النص المشفّر هنا…"></textarea>
+              <div class="row-btns">
+                <button class="btn p" id="reAnalyze">تحليل / هندسة عكسية</button>
+                <button class="btn" id="reDecrypt">محاولة فك التشفير</button>
+                <button class="btn" id="reExplain">اشرح الكود</button>
+                <button class="btn ghost" id="reClear">مسح</button>
+              </div>
+            </div>
+            <div class="col">
+              <div class="re-result" id="reResult"><span class="muted">النتيجة تظهر هنا…</span></div>
+              <div class="row-btns">
+                <button class="btn" id="reCopy"><svg class="ic"><use href="#i-copy"/></svg>نسخ</button>
+                <button class="btn" id="reToChat"><svg class="ic"><use href="#i-chat"/></svg>أرسلها للمحادثة</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- الحاسبة -->
+        <section class="pg" id="pg-calc">
+          <div class="pg-hd"><span class="pg-ic"><svg class="ic"><use href="#i-calc"/></svg></span><div><h2>الحاسبة</h2><p>تقدر تكتب بالكيبورد أيضاً: أرقام، + − × ÷ ^ % وأقواس، و Enter للنتيجة.</p></div></div>
+          <div class="pad calc-wrap">
+            <div class="cw">
+              <div class="disp"><div id="cr"></div><div id="ce">0</div></div>
+              <div id="keys"></div>
+            </div>
+            <div class="hist-box"><h3>السجل</h3><div id="chist"><span class="muted">ما فيه عمليات للحين</span></div></div>
+          </div>
+        </section>
+
+        <!-- الملاحظات -->
+        <section class="pg" id="pg-notes">
+          <div class="pg-hd"><span class="pg-ic"><svg class="ic"><use href="#i-note"/></svg></span><div><h2>ملاحظاتي</h2><p>سجّل أفكارك، وتقدر تسأل المساعد عن أي ملاحظة.</p></div></div>
+          <div class="pad">
+            <div class="add-box">
+              <textarea id="nt" placeholder="اكتب ملاحظة أو فكرة…" rows="3"></textarea>
+              <button class="btn p" id="nsv"><svg class="ic"><use href="#i-plus"/></svg>احفظ الملاحظة</button>
+            </div>
+            <div id="nl" class="notes-grid"></div>
+          </div>
+        </section>
+
+        <!-- المهام -->
+        <section class="pg" id="pg-todo">
+          <div class="pg-hd"><span class="pg-ic"><svg class="ic"><use href="#i-tasks"/></svg></span><div><h2>مهامي</h2><p id="todoSub">رتّب يومك بمهام صغيرة.</p></div></div>
+          <div class="pad">
+            <div class="tadd">
+              <input id="tdi" placeholder="مهمة جديدة…" autocomplete="off">
+              <button class="btn p" id="tda"><svg class="ic"><use href="#i-plus"/></svg>ضيف</button>
+              <button class="btn ghost" id="tdc">امسح المنجز</button>
+            </div>
+            <div id="todo"></div>
+          </div>
+        </section>
+
+        <!-- الإعدادات -->
+        <section class="pg" id="pg-set">
+          <div class="pg-hd"><span class="pg-ic"><svg class="ic"><use href="#i-sliders"/></svg></span><div><h2>الإعدادات</h2><p>كل شي يخص الذكاء والصوت والمظهر في مكان واحد.</p></div></div>
+          <div class="pad" id="sPad">
+            <div class="card">
+              <h3>لون التطبيق</h3>
+              <div class="theme-pick" id="themePick">
+                <button class="theme-btn sky" data-theme="sky"><i></i><span>سماوي فاتح</span></button>
+                <button class="theme-btn night" data-theme="night"><i></i><span>ليلي</span></button>
+                <button class="theme-btn violet" data-theme="violet"><i></i><span>بنفسجي</span></button>
+                <button class="theme-btn ember" data-theme="ember"><i></i><span>أحمر</span></button>
+              </div>
+            </div>
+            <div id="sf"></div>
+            <div class="card">
+              <h3>نسخة احتياطية</h3>
+              <p class="hint">تحفظ محادثاتك وإعداداتك وملاحظاتك ومهامك في ملف واحد. النسخة تحتوي مفاتيح الـ API، فلا ترسلها لأحد.</p>
+              <div class="row-btns">
+                <button class="btn" id="bkexp"><svg class="ic"><use href="#i-down"/></svg>صدّر نسخة</button>
+                <button class="btn" id="bkimp"><svg class="ic"><use href="#i-up"/></svg>استورد نسخة</button>
+                <button class="btn" id="tv"><svg class="ic"><use href="#i-vol"/></svg>جرّب الصوت</button>
+              </div>
+            </div>
+          </div>
+          <div class="savebar"><button class="btn p lg" id="sv"><svg class="ic"><use href="#i-check"/></svg>احفظ الإعدادات</button></div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"><span id="toastTxt"></span><button id="toastBtn" class="btn sm" hidden></button></div>
+
+<dialog id="cp">
+  <label class="search big"><svg class="ic"><use href="#i-search"/></svg><input id="cpq" placeholder="ابحث عن أمر…" autocomplete="off"></label>
+  <div id="cpl"></div>
+</dialog>
+
+<dialog id="dlg">
+  <form method="dialog" id="dlgForm">
+    <h3 id="dlgTitle"></h3>
+    <div id="dlgBody"></div>
+    <div class="row-btns end"><button class="btn p" value="ok" id="dlgOk">تم</button><button class="btn" value="cancel" id="dlgNo" formnovalidate>إلغاء</button></div>
+  </form>
+</dialog>
+
+<script src="calc.js"></script>
+<script src="sync.js"></script>
+<script src="web-api.js"></script>
+<script src="renderer.js"></script>
+</body>
+</html>

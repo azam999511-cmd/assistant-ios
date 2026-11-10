@@ -1,0 +1,13 @@
+{
+  "name": "musaedi-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "غلاف أندرويد/آيفون لتطبيق مساعدي (يفتح خادم البيسي)",
+  "scripts": { "sync": "npx cap sync" },
+  "dependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/ios": "^6.1.0"
+  }
+}

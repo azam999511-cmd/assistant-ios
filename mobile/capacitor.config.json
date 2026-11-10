@@ -1,0 +1,6 @@
+{
+  "appId": "local.musaedi.mobile",
+  "appName": "مساعدي",
+  "webDir": "www",
+  "server": { "androidScheme": "https", "allowNavigation": ["*"] }
+}
