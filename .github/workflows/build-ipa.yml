@@ -18,15 +18,20 @@ jobs:
         with:
           node-version: 18
 
+      - name: Create package.json if missing
+        run: |
+          if [ ! -f package.json ]; then
+            echo '{"name": "assistant-app", "version": "1.0.0", "private": true}' > package.json
+          fi
+
       - name: Install Ionic & Capacitor CLI
         run: |
           npm install -g @ionic/cli @capacitor/cli
 
       - name: Initialize Capacitor & Build iOS
         run: |
-          npm install
-          npx cap init "Assistant" "com.azzam.assistant" --web-dir .
-          npm install @capacitor/core @capacitor/ios
+          npm install --save @capacitor/core @capacitor/ios
+          npx cap init "Assistant" "com.azzam.assistant" --web-dir . --yes
           npx cap add ios
           npx cap sync ios
 
