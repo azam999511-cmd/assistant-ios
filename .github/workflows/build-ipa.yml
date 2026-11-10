@@ -44,7 +44,7 @@ jobs:
           zip -r Assistant.ipa Payload
 
       - name: Upload IPA Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Assistant-IPA
           path: ios/App/Assistant.ipa
