@@ -18,19 +18,19 @@ jobs:
         with:
           node-version: 18
 
-      - name: Build iOS Project
+      - name: Build iOS App Bundle
         run: |
-          # 1. إنشاء ملف package.json و capacitor.config.json مباشر بدون أوامر معقدة
-          echo '{"name": "assistant-app", "version": "1.0.0", "private": true, "dependencies": {"@capacitor/core": "^6.0.0", "@capacitor/ios": "^6.0.0"}}' > package.json
-          
-          echo '{"appId": "com.azzam.assistant", "appName": "Assistant", "webDir": "www", "bundledWebRuntime": false}' > capacitor.config.json
+          # 1. تثبيت أدوات كاباسيتور مباشرة وبدون تداخل
+          npm install @capacitor/core @capacitor/cli @capacitor/ios
 
-          # 2. تنظيم مجلد الويب
+          # 2. إنشاء إعدادات المشروع الأساسية
+          npx cap init "Assistant" "com.azzam.assistant" --web-dir www --bundled-web-runtime false || true
+
+          # 3. تنظيم مجلد الويب للملفات
           mkdir -p www
           find . -maxdepth 1 ! -name 'www' ! -name 'ios' ! -name '.' ! -name '..' -exec mv {} www/ \;
 
-          # 3. تثبيت الحزم وإضافة منصة آي أو إس
-          npm install
+          # 4. مزامنة منصة الآيفون
           npx cap add ios
           npx cap sync ios
 
