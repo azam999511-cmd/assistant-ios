@@ -1,0 +1,45 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Ionic & Capacitor CLI
+        run: |
+          npm install -g @ionic/cli @capacitor/cli
+
+      - name: Initialize Capacitor & Build iOS
+        run: |
+          npm install
+          npx cap init "Assistant" "com.azzam.assistant" --web-dir .
+          npm install @capacitor/core @capacitor/ios
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Build Unsigned IPA
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          mkdir -p Payload
+          mv build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -r Assistant.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Assistant-IPA
+          path: ios/App/Assistant.ipa
