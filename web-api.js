@@ -257,4 +257,13 @@
     document.addEventListener('visibilitychange', () => { if (!document.hidden) { fails = 1; check(); } });
     document.getElementById('offRetry').onclick = () => { fails = 1; check(); };
   });
+
+  /* الكيبورد ما يطلع لحاله لما تدخل محادثة: ما ينفتح إلا لو ضغطت على خانة الكتابة أو على أزرار الإرسال والأوامر السريعة */
+  let lastTap = 0;
+  document.addEventListener('touchstart', (e) => { if (e.target.closest && e.target.closest('#q, .composer, .qa, .cta')) lastTap = Date.now(); }, true);
+  const rawFocus = HTMLElement.prototype.focus;
+  HTMLElement.prototype.focus = function (...a) {
+    if (mob() && this.id === 'q' && Date.now() - lastTap > 1500) return;
+    return rawFocus.apply(this, a);
+  };
 })();
