@@ -15,15 +15,23 @@ jobs:
         working-directory: mobile
         run: |
           npm install
+          npm install @capacitor/haptics@^6.0.0
           npx cap add ios
           npx cap sync ios
 
-      - name: Info.plist (http + mic)
+      - name: Info.plist (http + mic + عربي)
         working-directory: mobile/ios/App/App
         run: |
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" Info.plist || true
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true" Info.plist || true
           /usr/libexec/PlistBuddy -c "Add :NSMicrophoneUsageDescription string للتحدث مع المساعد" Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string لتصوير الصور وإرسالها للمساعد" Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string لاختيار الصور وإرسالها للمساعد" Info.plist || true
+          # القوائم الأصلية (اختيار الصور والملفات) تطلع بالعربي بدل الإنجليزي
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDevelopmentRegion ar" Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleLocalizations array" Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleLocalizations: string ar" Info.plist || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleLocalizations: string en" Info.plist || true
 
       - name: Build (بدون توقيع)
         working-directory: mobile/ios/App
