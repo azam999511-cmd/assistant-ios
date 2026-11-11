@@ -601,12 +601,6 @@ dialog::backdrop { -webkit-backdrop-filter: blur(5px); }
   .sbar::after { content: ""; position: absolute; inset: -8px -12px; }
   .sbar.drag { width: 7px; background: var(--accent); }
 
-  /* عارض الصور */
-  #lb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483000; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none;
-    background: #03060f; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
-  #lb[hidden] { display: none; }
-  #lb img { width: 100%; height: 100%; object-fit: contain; touch-action: none; user-select: none; -webkit-user-select: none; will-change: transform; }
-  #lb .lb-x { position: absolute; z-index: 2; top: calc(env(safe-area-inset-top) + 10px); inset-inline-start: 12px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.16); }
 }
 
 /* نزّلنا رأس التطبيق شوي عشان ما يغطي عليه تغبيش شريط الحالة */
@@ -627,3 +621,12 @@ dialog::backdrop { -webkit-backdrop-filter: blur(5px); }
   #offline h3 { margin: 0; font-size: 1.15rem; }
   #offline p { margin: 0; color: var(--muted); line-height: 1.8; font-size: .92rem; }
 }
+
+/* ───────── عارض الصور (البيسي والجوال) ───────── */
+#lb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483000; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none;
+  background: rgba(3,6,15,.94); border-radius: inherit; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+#lb[hidden] { display: none; }
+#lb img { width: 100%; height: 100%; object-fit: contain; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; will-change: transform; }
+#lb .lb-x { position: absolute; z-index: 2; top: calc(env(safe-area-inset-top) + 12px); inset-inline-start: 14px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.16); }
+#lb .lb-x:hover { background: rgba(255,255,255,.28); }
+.thumbs img, .m .md img { cursor: zoom-in; }

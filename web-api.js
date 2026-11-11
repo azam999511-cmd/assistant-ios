@@ -129,30 +129,6 @@
     if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.register('/sw.js').catch(() => {});
   });
 
-  /* عارض الصور: اضغط أي صورة بالمحادثة تكبر، قرّب بإصبعين، واضغط بأي مكان تسكّرها */
-  addEventListener('DOMContentLoaded', () => {
-    const lb = document.createElement('div'); lb.id = 'lb'; lb.hidden = true;
-    lb.innerHTML = '<button class="lb-x" aria-label="إغلاق"><svg class="ic"><use href="#i-x"/></svg></button><img alt="">';
-    document.body.append(lb);
-    const im = lb.querySelector('img');
-    let sc = 1, tx = 0, ty = 0; const pts = new Map(); let d0 = 0, s0 = 1, moved = false;
-    const apply = () => { im.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + sc + ')'; };
-    const close = () => { lb.hidden = true; im.removeAttribute('src'); sc = 1; tx = ty = 0; apply(); };
-    document.addEventListener('click', (e) => {
-      const t = e.target.closest && e.target.closest('.thumbs img, .m .md img');
-      if (!t || !t.src) return;
-      im.src = t.src; sc = 1; tx = ty = 0; apply(); lb.hidden = false;
-    });
-    lb.addEventListener('pointerdown', (e) => { pts.set(e.pointerId, e); moved = false; if (pts.size === 2) { const [a, b] = [...pts.values()]; d0 = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); s0 = sc; } });
-    lb.addEventListener('pointermove', (e) => {
-      const p = pts.get(e.pointerId); if (!p) return;
-      if (pts.size === 2) { pts.set(e.pointerId, e); const [a, b] = [...pts.values()]; sc = Math.min(6, Math.max(1, s0 * Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) / d0)); moved = true; apply(); }
-      else if (sc > 1) { tx += e.clientX - p.clientX; ty += e.clientY - p.clientY; pts.set(e.pointerId, e); moved = true; apply(); }
-    });
-    const up = (e) => { const was = pts.size; pts.delete(e.pointerId); if (was === 1 && !moved) close(); if (sc <= 1) { tx = ty = 0; apply(); } };
-    lb.addEventListener('pointerup', up); lb.addEventListener('pointercancel', (e) => pts.delete(e.pointerId));
-  });
-
   /* شريط تمرير واضح (سفاري يخبّي الأصلي): يظهر دايم لما المحتوى طويل، وتقدر تسحبه بإصبعك */
   addEventListener('DOMContentLoaded', () => {
     const win = document.getElementById('win'); if (!win) return;

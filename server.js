@@ -3,10 +3,11 @@
    الجوال ما يخزّن مفاتيح الذكاء؛ كل الطلبات تمر على البيسي. */
 const http = require('http'), fs = require('fs'), path = require('path'), crypto = require('crypto');
 
+const zlib = require('zlib');
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webmanifest': 'application/manifest+json', '.png': 'image/png', '.ico': 'image/x-icon' };
 const STATIC = {
   '/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/calc.js': 'calc.js',
-  '/sync.js': 'sync.js', '/web-api.js': 'web-api.js', '/sw.js': 'sw.js', '/manifest.webmanifest': 'manifest.webmanifest',
+  '/sync.js': 'sync.js', '/web-api.js': 'web-api.js', '/sw.js': 'sw.js', '/theme-boot.js': 'theme-boot.js', '/manifest.webmanifest': 'manifest.webmanifest',
   '/icon-192.png': 'icon-192.png', '/icon-512.png': 'icon-512.png', '/splash-1206x2622.png': 'splash-1206x2622.png', '/splash-1320x2868.png': 'splash-1320x2868.png', '/splash-1179x2556.png': 'splash-1179x2556.png', '/splash-1290x2796.png': 'splash-1290x2796.png', '/splash-1170x2532.png': 'splash-1170x2532.png', '/splash-1284x2778.png': 'splash-1284x2778.png', '/splash-1125x2436.png': 'splash-1125x2436.png', '/splash-1242x2688.png': 'splash-1242x2688.png', '/splash-828x1792.png': 'splash-828x1792.png'
 };
 
@@ -26,6 +27,8 @@ function create({ dir, getToken, api }) {
 
   async function handle(req, res) {
     const u = new URL(req.url, 'http://x'), p = u.pathname;
+    /* فحص اتصال خفيف (بدون مفتاح، بدون محتوى) عشان التطبيق يعرف بسرعة إن البيسي شغّال */
+    if (p === '/ping') { res.writeHead(204, { 'cache-control': 'no-store', 'access-control-allow-origin': '*' }); return res.end(); }
     if (req.method === 'GET' && STATIC[p]) {
       try {
         const f = STATIC[p]; let data = fs.readFileSync(path.join(dir, f));
@@ -33,7 +36,18 @@ function create({ dir, getToken, api }) {
           const t = u.searchParams.get('t') || '', real = getToken();
           if (t && real && same(t, real)) { const m = JSON.parse(data.toString('utf8')); m.start_url = '/?t=' + encodeURIComponent(t); data = Buffer.from(JSON.stringify(m)); }
         }
-        res.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream', 'cache-control': 'no-cache' }); return res.end(data);
+        const ext = path.extname(f), hd = { 'content-type': TYPES[ext] || 'application/octet-stream', 'cache-control': 'no-cache' };
+        /* ETag: لو الملف ما تغيّر يرجع 304 فارغ بدل ما يحمّله كله من جديد (أسرع بكثير عبر Tailscale) */
+        if (p !== '/manifest.webmanifest') {
+          const tag = '"' + crypto.createHash('sha1').update(data).digest('base64url').slice(0, 20) + '"'; hd.etag = tag;
+          if (req.headers['if-none-match'] === tag) { res.writeHead(304, hd); return res.end(); }
+        }
+        /* ضغط gzip للنصوص: renderer.js وstyle.css يصغّرون لحوالي الربع */
+        if (/\.(html|css|js|webmanifest)$/.test(ext === '.webmanifest' ? '.webmanifest' : ext) && /\bgzip\b/.test(String(req.headers['accept-encoding'] || '')) && data.length > 1024) {
+          data = zlib.gzipSync(data, { level: 6 }); hd['content-encoding'] = 'gzip'; hd.vary = 'Accept-Encoding';
+        }
+        hd['content-length'] = data.length;
+        res.writeHead(200, hd); return res.end(data);
       } catch { res.writeHead(404); return res.end(); }
     }
     /* ربط تلقائي بدون صفحة الربط: بس لو الطلب جاي من شبكة Tailscale (شبكتك الخاصة، أجهزتك أنت بس).

@@ -1220,3 +1220,36 @@ async function init() {
 }
 init();
 })();
+
+/* ═════════ عارض الصور: اضغط أي صورة بالمحادثة تكبر (بيسي وجوال) ═════════ */
+(() => {
+  let lb = null, im = null, sc = 1, tx = 0, ty = 0, d0 = 0, s0 = 1, moved = false;
+  const pts = new Map();
+  const apply = () => { im.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + sc + ')'; };
+  const reset = () => { sc = 1; tx = ty = 0; apply(); };
+  const close = () => { if (!lb) return; lb.hidden = true; im.removeAttribute('src'); reset(); };
+  function build() {
+    lb = document.createElement('div'); lb.id = 'lb'; lb.hidden = true;
+    lb.innerHTML = '<button class="lb-x" aria-label="إغلاق"><svg class="ic"><use href="#i-x"/></svg></button><img alt="">';
+    im = lb.querySelector('img');
+    lb.addEventListener('pointerdown', (e) => { pts.set(e.pointerId, e); moved = false; if (pts.size === 2) { const [a, b] = [...pts.values()]; d0 = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); s0 = sc; } });
+    lb.addEventListener('pointermove', (e) => {
+      const p = pts.get(e.pointerId); if (!p) return;
+      if (pts.size === 2) { pts.set(e.pointerId, e); const [a, b] = [...pts.values()]; sc = Math.min(8, Math.max(1, s0 * Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) / d0)); moved = true; apply(); }
+      else if (sc > 1) { tx += e.clientX - p.clientX; ty += e.clientY - p.clientY; pts.set(e.pointerId, e); moved = true; apply(); }
+    });
+    lb.addEventListener('pointerup', (e) => { const was = pts.size; pts.delete(e.pointerId); if (was === 1 && !moved) close(); if (sc <= 1) reset(); });
+    lb.addEventListener('pointercancel', (e) => pts.delete(e.pointerId));
+    lb.addEventListener('wheel', (e) => { e.preventDefault(); sc = Math.min(8, Math.max(1, sc * (e.deltaY < 0 ? 1.15 : 1 / 1.15))); if (sc === 1) { tx = ty = 0; } apply(); }, { passive: false });
+    lb.addEventListener('dblclick', () => { if (sc > 1) reset(); else { sc = 2.5; apply(); } });
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('.thumbs img, .m .md img');
+    if (!t || !t.src) return;
+    if (!lb) build();
+    const host = matchMedia('(max-width:760px)').matches ? document.body : (document.querySelector('.app') || document.body);
+    if (lb.parentNode !== host) host.append(lb);
+    im.src = t.src; reset(); lb.hidden = false;
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && lb && !lb.hidden) { e.stopPropagation(); close(); } }, true);
+})();

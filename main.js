@@ -1,6 +1,13 @@
 'use strict';
 const { app, BrowserWindow, ipcMain, shell, Notification, globalShortcut, screen, dialog, safeStorage } = require('electron');
 const fs = require('fs'), path = require('path'), zlib = require('zlib'), { spawn } = require('child_process');
+/* مجلد البيانات: نثبّته على المجلد القديم اللي فيه محادثاتك وإعداداتك، عشان تغيير الاسم أو الأيقونة ما يضيّع شي */
+try {
+  const base = app.getPath('appData');
+  const found = ['murattib-assistant', 'Electron', 'مساعدي'].map((n) => path.join(base, n))
+    .find((d) => ['chats.json', 'settings.json', 'memory.json'].some((f) => fs.existsSync(path.join(d, f))));
+  if (found) app.setPath('userData', found);
+} catch {}
 const os = require('os'), crypto = require('crypto');
 const Calc = require('./calc'), Sync = require('./sync'), Srv = require('./server');
 
@@ -528,7 +535,7 @@ function createWindow(S) {
   if (saved && boundsOnScreen(saved)) Object.assign(base, { x: saved.x, y: saved.y, width: Math.max(saved.width, base.minWidth), height: Math.max(saved.height, base.minHeight) });
 
   win = new BrowserWindow({
-    ...base, show: false, autoHideMenuBar: true, title: 'مساعدي',
+    ...base, show: false, autoHideMenuBar: true, title: 'مساعدي', icon: path.join(__dirname, 'icon.ico'),
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, spellcheck: false }
   });
   win.loadFile('index.html');
@@ -562,6 +569,7 @@ ipcMain.on('win:setBounds', (_, b) => {
 ipcMain.on('app:relaunch', () => { app.relaunch(); app.exit(0); });
 
 /* ───────────── تشغيل التطبيق ───────────── */
+try { if (process.platform === 'win32') app.setAppUserModelId('local.murattib.assistant'); } catch {}
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
   app.quit();
